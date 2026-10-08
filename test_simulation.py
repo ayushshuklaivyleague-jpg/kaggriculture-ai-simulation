@@ -10,8 +10,8 @@ except ImportError:
     print("kaggle_environments not installed yet. Please wait for pip installation to finish.")
     sys.exit(1)
 
-import main as v2_agent
-import kaggriculture_agent_v1 as v1_agent
+import main as champion_agent
+import opponent_2945_upstream as upstream_agent
 
 def run_match(agent1, agent2, name1="Agent1", name2="Agent2", steps=720):
     print(f"\n--- MATCH: {name1} vs {name2} ({steps} steps) ---")
@@ -41,20 +41,14 @@ def run_match(agent1, agent2, name1="Agent1", name2="Agent2", steps=720):
 
 def main_suite():
     print("==================================================")
-    print("       KAGGRICULTURE V2 BENCHMARK HARNESS        ")
+    print("       KAGGRICULTURE CHAMPION BENCHMARK HARNESS   ")
     print("==================================================")
     
-    # 1. V2 vs Random
-    run_match(v2_agent.agent, "random", name1="V2_Strategic", name2="Random")
+    # 1. Champion vs Starter baseline
+    run_match(champion_agent.agent, "starter", name1="Champion", name2="Starter_Baseline")
     
-    # 2. V2 vs Starter baseline
-    run_match(v2_agent.agent, "starter", name1="V2_Strategic", name2="Starter_Baseline")
-    
-    # 3. V2 vs V1
-    run_match(v2_agent.agent, v1_agent.agent, name1="V2_Strategic", name2="V1_Heuristic")
-    
-    # 4. Swapped sides: V1 vs V2
-    run_match(v1_agent.agent, v2_agent.agent, name1="V1_Heuristic", name2="V2_Strategic")
+    # 2. Champion vs Upstream 2945
+    run_match(champion_agent.agent, upstream_agent.agent, name1="Champion", name2="Upstream_2945")
 
 if __name__ == "__main__":
     main_suite()

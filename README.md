@@ -93,13 +93,13 @@ Throughout development, several intuitive approaches proved counterproductive un
 
 1. **Continuous Analytical NPV Replanning (V2):**
    - *Hypothesis:* Calculating continuous Net Present Value for every tile and dynamic replanning on every turn should beat static action tapes.
-   - *Outcome:* In a deterministic spatial grid, dynamic replanners suffered from pathing hesitation and worker congestion. Rigid choreographic action tapes with stateful task chains outperformed free-form planners by 15–20% in net cash. The analytical model is archived in [`v2_planner_backup.py`](v2_planner_backup.py) and documented in [`V2_DESIGN.md`](V2_DESIGN.md).
+   - *Outcome:* In a deterministic spatial grid, dynamic replanners suffered from pathing hesitation and worker congestion. Rigid choreographic action tapes with stateful task chains outperformed free-form planners by 15–20% in net cash. The analytical model and technical documentation are preserved in [`archive/v2/`](archive/v2/).
 2. **Speculative Counter-Planning Layers:**
    - *Hypothesis:* Predicting opponent moves and altering our early crop mix to counter their anticipated sales would avoid shared gluts.
    - *Outcome:* Ablation experiments demonstrated that speculative counter-planning degraded performance on out-of-distribution seeds by 8–12%. Farm development velocity mattered far more than early-game opponent interference.
 3. **Predatory Order-Book Ambush (Adversarial Bot):**
    - *Hypothesis:* Stockpiling a war chest and dumping it in Slot 0 at steps 710/713 could front-run and crater the market price before rival orders execute.
-   - *Outcome:* While effective against opponents with huge end-of-season bulk dumps, it imposed a holding cost against steady-selling opponents. Pure choreographic density proved universally superior. The implementation is preserved in [`docs/adversarial.md`](docs/adversarial.md) and [`adversarial_ambush.py`](adversarial_ambush.py).
+   - *Outcome:* While effective against opponents with huge end-of-season bulk dumps, it imposed a holding cost against steady-selling opponents. Pure choreographic density proved universally superior. The implementation is preserved in [`docs/adversarial.md`](docs/adversarial.md) and [`archive/adversarial/`](archive/adversarial/).
 
 ---
 
@@ -118,7 +118,7 @@ pip install -U kaggle-environments numpy
 ```
 
 ### Run Head-to-Head Matches
-Execute a local 10-game match against the previous champion:
+Execute a local 10-game match against the upstream ladder leader:
 ```bash
 python eval_head_to_head.py
 ```
@@ -139,31 +139,31 @@ kaggle competitions submit kaggriculture -f main.py -m "Kaggriculture Champion T
 ## 7. Repository Structure
 
 ```
-.
-├── main.py                         # Champion Agent (Kaggle submission entrypoint)
-├── submission.py                   # Production submission file
-├── submission.tar.gz               # Validated standalone submission package
+kaggriculture-ai-simulation/
+├── README.md                       # Research narrative, benchmarks, and quickstart
+├── main.py                         # 🌟 Master Tactical Planner (Champion entrypoint)
+├── submission.py                   # Self-contained single-file submission
+├── FINAL_NOTEBOOK.ipynb            # Canonical tournament & submission notebook
 │
+├── eval_head_to_head.py            # Paired head-to-head match runner vs Upstream 2945
 ├── league_eval_harness.py          # Paired league evaluation harness with bootstrap CI
-├── eval_head_to_head.py            # Paired head-to-head match runner
 ├── run_extensive_eval.py           # 24-game multi-seed stress test
 ├── run_ablation_matrix.py          # Causal ablation runner for speculative layers
-│
-├── FINAL_NOTEBOOK.ipynb            # Clean submission & tournament notebook
-├── kaggriculture_champion_notebook.ipynb # Standalone tournament visualization notebook
+├── test_simulation.py              # Environment and integration smoke tests
 │
 ├── opponent_2945_upstream.py       # Benchmark opponent: Upstream 2945 Farm
 ├── opponent_market_shock.py        # Benchmark opponent: Market Shock baseline
-├── main_backup.py                  # Prior champion version for regression testing
 │
-├── V2_DESIGN.md                    # Technical documentation for NPV and pricing curves
 ├── docs/
-│   └── adversarial.md              # Documentation for experimental adversarial bot
-├── bot_adversarial/                # Standalone adversarial agent package
-├── archive/                        # Preserved ablations, variants, and diagnostic scripts
+│   └── adversarial.md              # Research notes on predatory order-book ambush
+├── archive/
+│   ├── adversarial/                # Experimental ambush bot and test suite
+│   ├── v2/                         # Analytical NPV planner and design specs
+│   └── ...                         # Historical ablation variants & diagnostic tools
 │
+├── LICENSE                         # Apache License 2.0
 ├── NOTICE.txt                      # Attribution notices for open-source derivations
-└── LICENSE                         # Apache License 2.0
+└── .gitignore                      # Git configuration
 ```
 
 ---

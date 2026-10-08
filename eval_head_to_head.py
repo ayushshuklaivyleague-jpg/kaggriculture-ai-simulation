@@ -1,4 +1,4 @@
-"""Head-to-head match: Upgraded agent (main.py) vs Previous Champion (main_backup.py).
+"""Head-to-head match: Tactical Planner (main.py) vs Upstream Ladder Leader (opponent_2945_upstream.py).
 
 Tests head-to-head win rate, cash margin, and market resilience.
 """
@@ -14,7 +14,7 @@ def load_agent(filepath):
 def main():
     print("Loading agents...")
     new_agent = load_agent("main.py")
-    old_agent = load_agent("main_backup.py")
+    old_agent = load_agent("opponent_2945_upstream.py")
     
     seeds = [29453000, 29453001, 29453002, 29453003, 29453004]
     results = []
@@ -59,10 +59,10 @@ def main():
     mean_old = sum(r["old"] for r in results) / len(results)
     
     print("\n" + "="*60)
-    print(f"HEAD-TO-HEAD SUMMARY: New vs Old Champion (10 games)")
+    print(f"HEAD-TO-HEAD SUMMARY: Tactical Planner vs Upstream 2945 (10 games)")
     print(f"Record: {wins}W - {losses}L - {ties}T (Win Rate: {win_rate:.1f}%)")
     print(f"New Agent Mean Cash: ${mean_new:.0f}")
-    print(f"Old Agent Mean Cash: ${mean_old:.0f}")
+    print(f"Upstream Mean Cash:  ${mean_old:.0f}")
     print(f"Mean Margin:         {mean_margin:+.0f}")
     print("="*60)
 

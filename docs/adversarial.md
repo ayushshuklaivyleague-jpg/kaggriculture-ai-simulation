@@ -1,6 +1,6 @@
 # Adversarial Market Predator (Experimental Bot)
 
-> **Context:** This document preserves the architecture, mechanics, and ablation notes for the experimental adversarial agent (`adversarial_ambush.py` and `bot_adversarial/`). While the champion agent focuses on physical choreographic efficiency and liquidity capture, this bot explores predatory order-book disruption.
+> **Context:** This document preserves the architecture, mechanics, and ablation notes for the experimental adversarial agent (`archive/adversarial/adversarial_ambush.py` and `archive/adversarial/bot_adversarial/`). While the champion agent focuses on physical choreographic efficiency and liquidity capture, this bot explores predatory order-book disruption.
 
 ---
 

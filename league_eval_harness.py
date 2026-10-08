@@ -161,7 +161,7 @@ def run_league_tournament(candidate_path="main.py", seeds=None):
     league = [
         ("Upstream_2945_Farm", "opponent_2945_upstream.py"),
         ("Market_Shock_Baseline", "opponent_market_shock.py"),
-        ("Previous_V2_Planner", "v2_planner_backup.py")
+        ("Previous_V2_Planner", "archive/v2/v2_planner_backup.py")
     ]
     
     league_summaries = []

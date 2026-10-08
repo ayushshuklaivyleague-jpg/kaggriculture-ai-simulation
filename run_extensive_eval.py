@@ -4,9 +4,14 @@ Verifies that score is consistently well above $3,000 in every match.
 """
 import time
 import math
+import importlib.util
 import kaggle_environments
 import main as current_agent
-import v2_planner_backup as previous_agent
+
+spec = importlib.util.spec_from_file_location("v2_planner", "archive/v2/v2_planner_backup.py")
+v2_mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(v2_mod)
+previous_agent = v2_mod
 
 TEST_SEEDS = [
     29453000, 29453001, 29453002, 29453003, 29453004, # Classic 2945 suite
