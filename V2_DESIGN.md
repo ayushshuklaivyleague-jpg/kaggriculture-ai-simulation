@@ -72,3 +72,39 @@ Wheat in the shed is strictly partitioned. Market sell orders cannot touch reser
 - **V2 Measured Turn Latency:** **0.32 ms - 0.52 ms** (~50x faster than budget)
 - **Memory Footprint:** Zero third-party dependencies, standard Python library only.
 - **Packaging:** Self-contained single file (`main.py`).
+
+---
+
+## 4. Market Calibration & Parameter Reference
+
+### 4.1 Non-Linear Price Formulation
+Market prices deviate from base price $P_{\text{base}}$ according to inventory divergence from equilibrium $I_0 = 10{,}000$:
+
+$$P(\text{inv}) = \max\left(1, \left\lfloor P_{\text{base}} + \text{sign} \cdot \text{amp} \cdot f(|\text{inv} - I_0|) + 0.5 \right\rfloor\right)$$
+
+where:
+- $\text{sign} = +1$ if $\text{inv} < I_0$ (scarcity) and $-1$ if $\text{inv} > I_0$ (glut)
+- $\text{amp} = \frac{\text{target} \cdot P_{\text{base}}}{f(T)}$
+- $T$ is the 24-day baseline capacity of a $5 \times 5$ field
+
+### 4.2 Per-Commodity Parameter Matrix
+
+| Commodity | Base ($P_0$) | Capacity ($T$) | Scarcity Curve ($< I_0$) | Target$_{\text{below}}$ | Glut Curve ($> I_0$) | Target$_{\text{above}}$ | $P(I_0 - T)$ | $P(I_0 + T)$ | $P(I_0 + 2T)$ |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Wheat** | \$25 | 400 | `sqrt` | 0.80 | `log` | 0.20 | \$45 | \$20 | \$19 |
+| **Carrot** | \$35 | 450 | `hinge` | 1.00 | `sqrt` | 0.70 | \$70 | \$10 | \$1 |
+| **Tomato** | \$60 | 200 | `hinge` | 0.40 | `sqrt` | 0.60 | \$84 | \$24 | \$9 |
+| **Strawberry** | \$120 | 100 | `sqrt` | 0.70 | `linear` | 1.60 | \$204 | \$1 | \$1 |
+| **Melon** | \$250 | 300 | `log` | 0.20 | `sq` | 3.60 | \$300 | \$1 | \$1 |
+| **Egg** | \$50 | 332 | `hinge` | 0.40 | `log` | 0.20 | \$70 | \$40 | \$39 |
+| **Milk** | \$160 | 122 | `sqrt` | 0.60 | `linear` | 1.60 | \$256 | \$1 | \$1 |
+| **Wool** | \$200 | 105 | `log` | 0.20 | `sq` | 2.20 | \$240 | \$1 | \$1 |
+| **Fertilizer** | \$100 | 200 | `linear` | 0.40 | `linear` | 0.40 | \$140 | \$60 | \$20 |
+
+### 4.3 Town Sink Dynamics
+- **Town Center:** Consumes 1 of every non-fertilizer commodity every 24 turns (flat rate).
+- **Town Shops (up to 8 unlocked):** Consume demanded goods every 4 turns:
+  - Bakery (Eggs, Wheat), Pizza Shop (Milk, Tomatoes, Wheat), Brunch Spot (Eggs, Wheat, Strawberries)
+  - Yarn Store (Wool 2x), Ice Cream Shop (Strawberries, Milk, Wheat), Pet Cafe (Carrots 2x)
+  - Smoothie Shop (Strawberries, Milk), Farmers Market (Wheat, Carrots, Tomatoes, Strawberries)
+

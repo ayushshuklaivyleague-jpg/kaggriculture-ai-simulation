@@ -48,9 +48,9 @@ def main():
     
     variants = [
         ("Variant_A_Baseline", "main.py"),
-        ("Variant_B_No_CounterPlan", "variant_b_no_counterplan.py"),
-        ("Variant_C_Reset_OR2", "variant_c_reset_or2.py"),
-        ("Variant_D_Clean_Router", "variant_d_clean_router.py")
+        ("Variant_B_No_CounterPlan", "archive/variant_b_no_counterplan.py"),
+        ("Variant_C_Reset_OR2", "archive/variant_c_reset_or2.py"),
+        ("Variant_D_Clean_Router", "archive/variant_d_clean_router.py")
     ]
     
     results = {}
