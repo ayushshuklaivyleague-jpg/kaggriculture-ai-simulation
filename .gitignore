@@ -1,0 +1,34 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment and virtualenvs
+.env
+.venv
+env/
+venv/
+ENV/
+kaggriculture_env/
+
+# Scratch & runtime logs
+*.log
+ambush_debug.txt
+harvest_log.txt
+hourly_log.txt
+probe_out.txt
+routes_profile.json
+telemetry_dump.json
+replay.json
+replays/
+logs/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary extracted dirs
+extracted_market_shock/
