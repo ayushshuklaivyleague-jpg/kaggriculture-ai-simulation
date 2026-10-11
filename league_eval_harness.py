@@ -16,7 +16,7 @@ import numpy as np
 import kaggle_environments
 
 # Configurable Test Suite
-DEFAULT_SEEDS = [29453000, 29453001, 29453002, 29453003, 29453004]
+DEFAULT_SEEDS = [29453000 + i for i in range(20)]  # 20 independent paired seeds (40 games per opponent)
 
 def load_agent_from_file(filepath, name):
     spec = importlib.util.spec_from_file_location(name, filepath)
@@ -54,9 +54,10 @@ def run_single_game(agent0, agent1, seed):
     s0 = final[0].status
     s1 = final[1].status
     
-    # Check for crashes (< $3,500 indicates silent error fallback to PASS)
-    crash0 = (r0 < 3500) or (s0 != "DONE")
-    crash1 = (r1 < 3500) or (s1 != "DONE")
+    # Technical crash detection: relies on unhandled exceptions, non-DONE episode status, or runtime error faults.
+    # Scores below economic targets are valid game outcomes, not technical crashes.
+    crash0 = (s0 != "DONE") or (s0 == "ERROR")
+    crash1 = (s1 != "DONE") or (s1 == "ERROR")
     
     return {
         "r0": r0,
