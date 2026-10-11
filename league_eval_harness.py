@@ -54,10 +54,20 @@ def run_single_game(agent0, agent1, seed):
     s0 = final[0].status
     s1 = final[1].status
     
-    # Technical crash detection: relies on unhandled exceptions, non-DONE episode status, or runtime error faults.
-    # Scores below economic targets are valid game outcomes, not technical crashes.
-    crash0 = (s0 != "DONE") or (s0 == "ERROR")
-    crash1 = (s1 != "DONE") or (s1 == "ERROR")
+    # Technical crash & runtime fault detector:
+    # Specifically inspects agent unhandled exceptions, timeout status, or non-DONE episode faults.
+    # Economic underperformance (e.g. low ending cash) is preserved as a valid score, NOT a crash.
+    crash0 = False
+    crash1 = False
+    fault_msg0 = None
+    fault_msg1 = None
+    
+    if s0 not in ("DONE",):
+        crash0 = True
+        fault_msg0 = f"Non-DONE status: {s0}"
+    if s1 not in ("DONE",):
+        crash1 = True
+        fault_msg1 = f"Non-DONE status: {s1}"
     
     return {
         "r0": r0,
