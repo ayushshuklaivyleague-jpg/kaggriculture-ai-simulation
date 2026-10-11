@@ -15,7 +15,7 @@ Autonomous tactical farming agent, dynamic liquidity arbitrage, and tournament e
 
 **Kaggriculture** is a turn-based farming simulation where two players compete over a 30-day season (720 turns, 24 turns/day) to maximize final bank cash. Players manage a spatial grid, hire labor with Fibonacci cost scaling, and trade harvested commodities against an automated market maker with non-linear price degradation.
 
-I engineered the **Master Tactical Planner (`main.py`)**, an autonomous agent that achieves **70.0% win rate against the top public ladder champion (The 2945 Farm)** and **100% win rate against standard baselines**. 
+I engineered the **Master Tactical Planner (`main.py`)**, an autonomous agent that achieves **70.0% win rate against the top public ladder champion (The 2945 Farm)** and **100.0% win rate against the deterministic starter baseline (20/20)**. 
 
 Rather than relying on ungrounded heuristics or unconstrained reinforcement learning, the agent solves two coupled problems:
 1. **Physical Labor Optimization:** Frame-perfect coordination of the farmer and hired hands to clear land, maintain crops, and prevent animal starvation with zero wasted turns.
@@ -25,15 +25,14 @@ Rather than relying on ungrounded heuristics or unconstrained reinforcement lear
 
 ## 2. Why the Economic Strategy Works
 
-In Kaggriculture, raw farm output does not guarantee victory—**how and when you sell determines your realized price**:
+In Kaggriculture, raw farm output does not guarantee victory—**trade timing and inventory control dictate realized prices against the AMM**:
 
-- **Early Liquidity Generation (Productive Opening):** Standard agents idle workers on Day 0 while waiting for land clearance. The champion dispatches Farm Hand 1 on turn 0 to coordinate `(2,4)`—a future pasture site—to plant and water an extra wheat crop. This temporary crop is harvested on turn 54 and delivered on turn 57, injecting critical early capital into the bank before market prices decline. The pasture is restored immediately afterward without losing a single livestock turn.
-- **Dynamic Milk Retention (`nomilk` Rule):** Cow milk has a high base value ($160/unit), but gluts crash the price to $1.00. The agent detects when milk-consuming shops (`PIZZA_SHOP`, `ICE_CREAM_SHOP`, `SMOOTHIE_SHOP`) are unlocked in town. If active, it preserves cows and sells milk directly into recurring town demand ticks; if absent, it transitions capacity toward wool and eggs.
-- **Feed Reserve Guard:** Animals escape if unfed for two consecutive days. The agent dynamically partitions warehouse inventory:
-  $$\text{Wheat Reserve} = N_{\text{animals}} \times (30 - \text{Day}) + N_{\text{animals}}$$
-  Market orders are strictly prohibited from touching reserved wheat, guaranteeing 0% livestock abandonment.
-- **Endogenous Price Timing:** Town center and town shops consume commodities on deterministic schedules (every 4 and 24 turns), temporarily draining market supply. Selling produce immediately after town consumption ticks captures top-of-curve prices before rival supply refills the market.
-- **Terminal Asset Liquidation:** Over turns 710–718, the agent shifts from continuous compounding to total liquidation, converting all stored produce, feed, and excess inventory into cash before the season closes.
+- **Productive Opening:** Rather than idling workers on Day 0, Farm Hand 1 cultivates a temporary wheat crop on future pasture tile `(2,4)`. Harvested and delivered on turn 57, this injects early liquidity before market prices decay without delaying pasture construction.
+- **Dynamic Milk Retention (`nomilk` Rule):** Cow milk starts high ($160) but gluts crash prices to $1.00. The agent monitors milk-consuming town shops (`PIZZA_SHOP`, `ICE_CREAM_SHOP`, `SMOOTHIE_SHOP`), retaining cows when demand ticks are active and pivoting capacity to wool and eggs when absent.
+- **Feed Reserve Guard:** Animals escape if unfed for two consecutive days. The agent dynamically partitions warehouse stock—$$\text{Wheat Reserve} = N_{\text{animals}} \times (30 - \text{Day}) + N_{\text{animals}}$$—strictly locking animal feed from market sales to guarantee 0% livestock abandonment.
+- **Terminal Asset Liquidation:** Over turns 710–718, the agent halts long-term compounding and liquidates all stored produce, feed reserves, and excess inventory into cash before the season closes.
+
+*Market trades are synchronized with deterministic town consumption ticks (every 4 and 24 turns) to capture top-of-curve prices during transient supply drains.*
 
 ---
 
@@ -75,7 +74,7 @@ All evaluations use a **paired league evaluation harness** across identical `(se
 
 | Opponent Benchmark | Match Count | Record (W-L-T) | Win Rate | Paired Delta Margin [95% CI] | Result |
 |:---|:---:|:---:|:---:|:---:|:---:|
-| **The 2945 Farm (Upstream Champion)** | 10 Paired Games | **7W - 3L - 0T** | **70.0%** | **+\$1,240** [+\$420, +\$2,060] | **Significant Win** |
+| **The 2945 Farm (Upstream Champion)** | 10 Paired Games | **7W - 3L - 0T** | **70.0%** | **+\$1,240** [+\$420, +\$2,060] | **Champion Ahead** |
 | **Market Shock Baseline** | 10 Paired Games | **6W - 4L - 0T** | **60.0%** | **+\$680** [-\$110, +\$1,470] | Positive Margin |
 | **Deterministic Starter** | 20 Paired Games | **20W - 0L - 0T** | **100.0%** | **+\$3,850** [+\$3,100, +\$4,600] | Undefeated |
 
@@ -93,13 +92,13 @@ Throughout development, several intuitive approaches proved counterproductive un
 
 1. **Continuous Analytical NPV Replanning (V2):**
    - *Hypothesis:* Calculating continuous Net Present Value for every tile and dynamic replanning on every turn should beat static action tapes.
-   - *Outcome:* In a deterministic spatial grid, dynamic replanners suffered from pathing hesitation and worker congestion. Rigid choreographic action tapes with stateful task chains outperformed free-form planners by 15–20% in net cash. The analytical model and technical documentation are preserved in [`archive/v2/`](archive/v2/).
+   - *Outcome:* In a deterministic spatial grid, dynamic replanners suffered from pathing hesitation and worker congestion. In our tested scenarios, the choreographic agent produced 15–20% higher net cash than the evaluated dynamic replanning variants. The analytical model and technical documentation are preserved in [`archive/v2/`](archive/v2/).
 2. **Speculative Counter-Planning Layers:**
    - *Hypothesis:* Predicting opponent moves and altering our early crop mix to counter their anticipated sales would avoid shared gluts.
    - *Outcome:* Ablation experiments demonstrated that speculative counter-planning degraded performance on out-of-distribution seeds by 8–12%. Farm development velocity mattered far more than early-game opponent interference.
 3. **Predatory Order-Book Ambush (Adversarial Bot):**
    - *Hypothesis:* Stockpiling a war chest and dumping it in Slot 0 at steps 710/713 could front-run and crater the market price before rival orders execute.
-   - *Outcome:* While effective against opponents with huge end-of-season bulk dumps, it imposed a holding cost against steady-selling opponents. Pure choreographic density proved universally superior. The implementation is preserved in [`docs/adversarial.md`](docs/adversarial.md) and [`archive/adversarial/`](archive/adversarial/).
+   - *Outcome:* While effective against opponents with huge end-of-season bulk dumps, it imposed a holding cost against steady-selling opponents. Pure choreographic execution performed best across the evaluated opponents. The implementation is preserved in [`docs/adversarial.md`](docs/adversarial.md) and [`archive/adversarial/`](archive/adversarial/).
 
 ---
 

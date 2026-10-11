@@ -105,6 +105,9 @@ def evaluate_against_opponent(candidate_fn, opponent_fn, opp_name, seeds):
     wins = []
     crashes = 0
     
+    paired_deltas = []
+    paired_wins = []
+    
     for seed in seeds:
         res = run_paired_match(candidate_fn, opponent_fn, seed)
         s0 = res["seat0"]
@@ -112,6 +115,8 @@ def evaluate_against_opponent(candidate_fn, opponent_fn, opp_name, seeds):
         
         diffs.extend([s0["delta"], s1["delta"]])
         wins.extend([s0["win"], s1["win"]])
+        paired_deltas.append(res["paired_mean_delta"])
+        paired_wins.append(res["paired_win"])
         if s0["crash"]: crashes += 1
         if s1["crash"]: crashes += 1
         
@@ -126,7 +131,9 @@ def evaluate_against_opponent(candidate_fn, opponent_fn, opp_name, seeds):
     loss_count = sum(w == 0.0 for w in wins)
     win_rate = (sum(wins) / total_games) * 100.0
     
-    mean_delta, ci_low, ci_high = bootstrap_ci(diffs)
+    # Rigorous paired bootstrap: resample at the paired match level (seed, opponent)
+    # to preserve seat-bias cancellation and avoid artificial sample size inflation.
+    mean_delta, ci_low, ci_high = bootstrap_ci(paired_deltas)
     
     summary = {
         "opponent": opp_name,
