@@ -216,6 +216,12 @@ def run_league_tournament(candidate_path="main.py", seeds=None):
     print("-" * 75)
     print(f"OVERALL LEAGUE WIN RATE: {overall_win_rate:.1f}% across {total_games} paired games ({total_elapsed:.1f}s)")
     print("=" * 75)
+
+    import json
+    out_json = "LEAGUE_RESULTS.json"
+    with open(out_json, "w") as f:
+        json.dump(league_summaries, f, indent=2)
+    print(f"Audit benchmark artifact saved to {out_json}")
     
     return league_summaries
 
