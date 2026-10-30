@@ -201,3 +201,13 @@ omilk rule) monitoring town demand shops.
 
 - **Competition Format Requirements**: The Kaggle Kaggriculture evaluation environment requires a self-contained, standalone single-file agent (`submission.py`) encapsulating the full simulation agent loop, AMM market trade logic, and pre-computed opening action tapes.
 - **Relationship between `main.py` and `submission.py`**: In this repository, `main.py` and `submission.py` are synchronized identical entry points. This design eliminates any execution drift between local mirrored-seat tournament simulations (`league_eval_harness.py`, `eval_head_to_head.py`) and official Kaggle submission uploads.
+
+
+---
+
+## 🤖 AI-Assisted Development & Engineering Tool Disclosure
+
+- **Development Stack**: Python 3.10+, kaggle-environments, NumPy, and SciPy.
+- **AI Tool Assistance**: ChatGPT and Antigravity were used for simulation harness debugging, analyzing order-book dynamics, refining AMM margin calculators, and drafting documentation.
+- **Strategy & Engineering**: The dynamic milk retention (
+omilk) trigger, deterministic feed reserve guard, and mirrored-seat tournament evaluation framework were authored and verified by Ayush Shukla.
