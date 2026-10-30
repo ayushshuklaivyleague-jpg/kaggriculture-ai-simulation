@@ -78,6 +78,10 @@ All evaluations use a **paired league evaluation harness** across identical `(se
 | **Market Shock Baseline** | 10 Paired Games | **6W - 4L - 0T** | **60.0%** | **+\$680** [-\$110, +\$1,470] | Positive Margin |
 | **Deterministic Starter** | 20 Paired Games | **20W - 0L - 0T** | **100.0%** | **+\$3,850** [+\$3,100, +\$4,600] | Undefeated |
 
+
+> [!NOTE]
+> ***Exploratory Sample-Size Caveat on 10-Game Paired Benchmarks**: The 7W–3L–0T (70.0%) result versus The 2945 Farm was measured across a 10-game paired mirrored-seat test suite. Given the small sample size ( = 10$), this metric is documented as an exploratory local benchmark rather than definitive statistical proof of universal superiority. For extended evaluation, see eval_head_to_head.py.
+
 ### Robustness & Generalization
 Evaluated across out-of-distribution (OOD) seeds `[42, 12345, 99999, 777777, 20260920]`:
 - **Average Final Cash:** **\$5,120+** (starting capital: \$3,000)
@@ -175,3 +179,17 @@ This project is licensed under the **Apache License 2.0**. See [LICENSE](LICENSE
 - **Choreography Chassis:** Built upon *The 2945 Farm* by Thomas Tschinkel, yhay81, destbreso, aurax7, tetsutani, and prvsiyan under Apache-2.0.
 - **Productive Opening:** Dmitrii Gluzdov (temporary early wheat cultivation on future pasture site).
 - **Economic Formulation & Feed Guard:** Ayush A. Shukla (Dynamic milk retention, feed inventory partition, terminal liquidation).
+
+
+---
+
+## 🤝 Upstream Lineage, Apache-2.0 Notices & Original Contributions
+
+This project builds upon public open-source strategies developed during the Kaggle Kaggriculture simulation challenge:
+- **Upstream Foundations & Apache-2.0 Lineage**: Built upon Thomas Tschinkel's *The 2945 Farm* (which aggregated contributions from yhay81, Ahmed Berat Ozer, prvsiyan, aurax7, tetsutani, and destbreso) and Dmitrii Gluzdov's temporary opening wheat modification (*A Smaller Market Shock*). Full notices and original headers are preserved verbatim in [NOTICE.txt](NOTICE.txt) and [main.py](main.py).
+- **Original Contributions by Ayush Shukla**:
+  - Engineered the Dynamic Milk Retention (
+omilk rule) monitoring town demand shops.
+  - Implemented the deterministic Feed Reserve Guard ({\text{animals}} \times (30 - \text{Day}) + N_{\text{animals}}$) eliminating livestock abandonment.
+  - Developed the Paired League Evaluation Harness (league_eval_harness.py, eval_head_to_head.py) executing mirrored-seat evaluations.
+  - Authored systematic ablation and out-of-distribution stress testing across diverse simulator seeds.
