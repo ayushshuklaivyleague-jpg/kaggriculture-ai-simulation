@@ -80,7 +80,7 @@ All evaluations use a **paired league evaluation harness** across identical `(se
 
 
 > [!NOTE]
-> ***Exploratory Sample-Size Caveat on 10-Game Paired Benchmarks**: The 7W–3L–0T (70.0%) result versus The 2945 Farm was measured across a 10-game paired mirrored-seat test suite. Given the small sample size ( = 10$), this metric is documented as an exploratory local benchmark rather than definitive statistical proof of universal superiority. For extended evaluation, see eval_head_to_head.py.
+> ***Exploratory Sample-Size Caveat on 10-Game Paired Benchmarks**: The 7W–3L–0T (70.0%) result versus The 2945 Farm was measured across a 10-game paired mirrored-seat test suite. Given the small sample size ($N = 10$), this metric is documented as an exploratory local benchmark rather than definitive statistical proof of universal superiority. For extended evaluation, see eval_head_to_head.py.
 
 ### Robustness & Generalization
 Evaluated across out-of-distribution (OOD) seeds `[42, 12345, 99999, 777777, 20260920]`:
@@ -193,3 +193,11 @@ omilk rule) monitoring town demand shops.
   - Implemented the deterministic Feed Reserve Guard ({\text{animals}} \times (30 - \text{Day}) + N_{\text{animals}}$) eliminating livestock abandonment.
   - Developed the Paired League Evaluation Harness (league_eval_harness.py, eval_head_to_head.py) executing mirrored-seat evaluations.
   - Authored systematic ablation and out-of-distribution stress testing across diverse simulator seeds.
+
+
+---
+
+## 📦 Submission Architecture & Entry-Point Structure
+
+- **Competition Format Requirements**: The Kaggle Kaggriculture evaluation environment requires a self-contained, standalone single-file agent (`submission.py`) encapsulating the full simulation agent loop, AMM market trade logic, and pre-computed opening action tapes.
+- **Relationship between `main.py` and `submission.py`**: In this repository, `main.py` and `submission.py` are synchronized identical entry points. This design eliminates any execution drift between local mirrored-seat tournament simulations (`league_eval_harness.py`, `eval_head_to_head.py`) and official Kaggle submission uploads.
