@@ -1,4 +1,4 @@
-# 🌾 Kaggriculture: Championship Tactical Planner & Economic Market Simulation
+# 🌾 Kaggriculture: Tactical Planner & Economic Market Simulation
 
 [![Kaggle Competition](https://img.shields.io/badge/Kaggle-Competition-20BEFF?logo=kaggle&logoColor=white)](https://www.kaggle.com/competitions/kaggriculture)
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
@@ -36,7 +36,7 @@ In Kaggriculture, raw farm output does not guarantee victory—**trade timing an
 
 ---
 
-## 3. Champion Architecture
+## 3. Tactical Architecture & Agent Mechanics
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -144,7 +144,7 @@ kaggle competitions submit kaggriculture -f main.py -m "Kaggriculture Champion T
 ```
 kaggriculture-ai-simulation/
 ├── README.md                       # Research narrative, benchmarks, and quickstart
-├── main.py                         # 🌟 Master Tactical Planner (Champion entrypoint)
+├── main.py                         # 🌟 Master Tactical Planner (Production entrypoint)
 ├── submission.py                   # Self-contained single-file submission
 ├── FINAL_NOTEBOOK.ipynb            # Canonical tournament & submission notebook
 │
